@@ -1,0 +1,13 @@
+<ul class="nav navbar-nav navbar-right">
+    <li>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            {{ username }}
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+            {% for menuitem in menuitems %}
+            <li><a href="{{ menuitem.herf }}">{{ menuitem.text }}</a></li>
+            {% endfor %}
+        </ul>
+    </li>
+</ul>

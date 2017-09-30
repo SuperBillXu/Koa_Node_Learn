@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <script src="/assets/js/jquery.min.js"></script>
+</head>
+
+<body>
+    <h1>TestLogin</h1>
+    <form id='login_form'>
+        <p>User name: <input name="name" value="koa"></p>
+        <p>Password: <input name="password" type="password"></p>
+        <p><input type="submit" value="Submit"></p>
+        <p id='login_notice' style="visibility:hidden">Invalid user name or password! <a href="\login.html">Try again</a></p>
+    </form>
+    <script>
+        $('#login_form').on('submit', function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: "post",
+                url: "/api/authorization",
+                data: {
+                    name: $('#login_form input[name=name]').val(),
+                    password: $('#login_form input[name=password]').val()
+                },
+                success: function (data) {
+                    localStorage.setItem('user_token', data.token);
+                    $(window.location).attr('href',`/`);
+                },
+                error: function (data) {
+                    $('#login_notice').css('visibility', 'visible');
+                }
+            });
+        })
+    </script>
+</body>
+
+</html>

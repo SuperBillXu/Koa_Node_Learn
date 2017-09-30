@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dash board</title>
+    <link rel=stylesheet href="/assets/css/bootstrap.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">菜鸟教程</a>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            </div>
+            <div id="navbar-collapse" class="collapse navbar-collapse">
+                <ul id="navbar-left" class="nav navbar-nav">
+                    <li class="active"><a href="#">iOS</a></li>
+                    <li><a href="#">SVN</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Java
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">jmeter</a></li>
+                            <li><a href="#">EJB</a></li>
+                            <li><a href="#">Jasper Report</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">分离的链接</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">另一个分离的链接</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul id="navbar-right" class="nav navbar-nav navbar-right">
+                    <li><a href="/login.html"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Home Page</h1>
+            <p>介绍网站基本情况</p>
+        </div>
+    </div>
+
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/jquery.extension.js"></script>
+    <script>
+        $.ajax({
+            type: "get",
+            url: "/api/user_menu",
+            success: function (data) {
+                $('#navbar-right').remove();
+                $('#navbar-collapse').append(data);
+            },
+            error: function (data) {
+                console.log("User have not login.");
+            }
+        });
+
+        $.ajax({
+            type: "get",
+            url: "/api/account",
+            success: function (data) {
+                $('div.jumbotron').remove();
+                let result = `<div class="jumbotron"><h1>Hello</h1>`;
+                if (data) {
+                    result += '<ul>';
+                    for (let key in data) {
+                        result += `<li>${key}: ${data[key]}</li>`;
+                    }
+                    result += '</ul></div>'
+                }
+                $('body>div.container').append(result);
+            },
+            error: function (data) {
+                console.log("User have not login.");
+            }
+        });
+    </script>
+</body>
+
+</html>
