@@ -1,0 +1,70 @@
+{% extends "templates/basic_page.njk" %}
+
+{% block body %}
+{{ super() }}
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">菜鸟教程</a>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        </div>
+        <div id="navbar-collapse" class="collapse navbar-collapse">
+            <ul id="navbar-left" class="nav navbar-nav">
+                <li class="active"><a href="#">iOS</a></li>
+                <li><a href="#">SVN</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    Java
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">jmeter</a></li>
+                        <li><a href="#">EJB</a></li>
+                        <li><a href="#">Jasper Report</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">分离的链接</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">另一个分离的链接</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul id="navbar-right" class="nav navbar-nav navbar-right">
+                <li><a href="/login.html"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block script %}
+{{ super() }}
+<script>
+    var menuData = localStorage.getItem('menu');
+    menuData && (menuData=JSON.parse(menuData));
+    if (menuData && menuData.expired > Date.now()){
+        setNavMenu(menuData);        
+    }
+    else if (localStorage.getItem('user_token')) {
+        $.ajax({
+            type: "get",
+            url: "/api/user_menu",
+            success: function (data) {
+                setNavMenu(data);
+                localStorage.setItem('menu', JSON.stringify(data));
+            },
+            error: function (data) {
+                console.log("User have not login.");
+            }
+        });
+    }    
+
+    function setNavMenu(data) {
+        $('#navbar-right').remove();
+        $('#navbar-collapse').append(data.menu);
+    }
+</script>    
+{% endblock %}

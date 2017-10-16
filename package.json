@@ -5,11 +5,13 @@
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
+    "server": "gulp && node main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "animate.css": "^3.5.2",
     "bluebird": "^3.5.0",
     "bootstrap": "^3.3.7",
     "jquery": "^3.2.1",
@@ -22,6 +24,10 @@
   },
   "devDependencies": {
     "gulp": "^3.9.1",
-    "gulp-nunjucks": "^3.0.0"
+    "gulp-clean": "^0.3.2",
+    "gulp-data": "^1.2.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-render-nunjucks": "^2.0.1",
+    "gulp-sequence": "^0.4.6"
   }
 }

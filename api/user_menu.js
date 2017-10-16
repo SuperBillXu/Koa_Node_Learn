@@ -1,19 +1,24 @@
 const jwt = require('jsonwebtoken');
 const generic = require('./../generic.json');
-const koa_nunjucks_controller = require('./../koa-nunjucks-controller');
+const koa_nunjucks_controller = require('./../koa_extensions/koa-nunjucks-controller');
 
 let fn_user_menu = async (ctx, next) => {
     let token = ctx.request.query.token || ctx.request.header.authorization || '';
     token = token.replace('Bearer ', '');
     let tokenInfo = token && jwt.decode(token, { secret: generic.secretKey });
 
-    ctx.response.status = 200;
-    ctx.response.type = 'text/html';
-    ctx.response.body = koa_nunjucks_controller.default.render("user_menu.njk", {
+    let menu = koa_nunjucks_controller.default.render("user_menu.njk", {
         username: tokenInfo.user,
         menuitems: [{ herf: "/user/dashboard.html", text: "Dashboard" },
         { herf: "#", text: "Sign out" }]
     });
+
+    ctx.response.status = 200;
+    ctx.response.type = 'application/json';
+    ctx.response.body = {
+        expired: Date.now() + 1440000,//1000*24*60
+        menu: menu
+    }
 };
 
 module.exports = { "GET /api/user_menu": fn_user_menu };

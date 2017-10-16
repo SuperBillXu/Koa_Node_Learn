@@ -1,10 +1,10 @@
-'use strict'
+'use strict';
 
 const koa = require('koa');
 const koa_jwt = require('koa-jwt');
 const koa_bodyParser = require('koa-bodyparser');
-const koa_router_controller = require('./koa-router-controller');
-const koa_nunjucks_controller = require('./koa-nunjucks-controller');
+const koa_router_controller = require('./koa_extensions/koa-router-controller');
+const koa_nunjucks_controller = require('./koa_extensions/koa-nunjucks-controller');
 const generic = require('./generic.json');
 
 let app = new koa();
@@ -14,14 +14,13 @@ app.use(async (ctx, next) => {
     console.log(`Process ${ctx.request.method} ${ctx.request.url}...`);
     await next();
 });
+app.use(koa_router_controller.publicDirectory('/dist'));
 app.use(async (ctx, next) => {
-    if (ctx.request.path === '/test') {
-        ctx.response.body = koa_nunjucks_controller.default.render('test.njk', { username: "Hello Nunjucks!" });
-    } else {
-        await next();
-    }
+    await next();
+    ctx.response.status = 404;
+    ctx.response.type = 'text/html';
+    ctx.response.body = koa_nunjucks_controller.default.render('notfound_page.njk', {});
 });
-app.use(koa_router_controller.publicDirectory('/public'));
 app.use(koa_jwt({
     secret: generic.secretKey,
     getToken: ctx => ctx.request.query.token
