@@ -1,3 +1,29 @@
 {
-    "secretKey": "jwtDemo"
+    "secretKey": "jwtDemo",
+    "copyToDist": [
+        {
+            "src": [
+                "node_modules/bootstrap/dist/css/*.min.css",
+                "node_modules/bootstrap/dist/css/*.min.css.map"
+            ],
+            "dest": "dist/assets/css"
+        },
+        {
+            "src": [
+                "node_modules/bootstrap/dist/js/*.min.js",
+                "jquery.extension.js",
+                "node_modules/jquery/dist/jquery.min.js",
+                "node_modules/jquery/dist/jquery.min.map"
+            ],
+            "dest": "dist/assets/js"
+        },
+        {
+            "src": "node_modules/bootstrap/dist/fonts/*.*",
+            "dest": "dist/assets/fonts"
+        },
+        {
+            "src": "node_modules/animate.css/*.min.css",
+            "dest": "dist/assets/css"
+        }
+    ]
 }

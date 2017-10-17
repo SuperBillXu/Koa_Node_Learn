@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
-    "server": "gulp && node main.js",
+    "server": "gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -25,9 +25,11 @@
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
+    "gulp-connect": "^5.0.0",
     "gulp-data": "^1.2.1",
+    "gulp-nunjucks-render": "^2.2.1",
     "gulp-rename": "^1.2.2",
-    "gulp-render-nunjucks": "^2.0.1",
-    "gulp-sequence": "^0.4.6"
+    "gulp-sequence": "^0.4.6",
+    "gulp-watch": "^4.3.11"
   }
 }
