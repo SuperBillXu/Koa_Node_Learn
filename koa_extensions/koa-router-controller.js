@@ -3,6 +3,13 @@ const path = require('path');
 const fs = Promise.promisifyAll(require('fs'));
 const koa_router = require('koa-router');
 const rootdir = path.dirname(require.main.filename);
+const responsTypeDict = {
+    ".html": "text/html",
+    ".js": "text/javascript",
+    ".css": "text/css",
+    ".ico": "image/x-icon"
+};
+
 
 function appendControllers(directory) {
     let result_router = koa_router();
@@ -52,42 +59,30 @@ let fn_public = function (file, responsType) {
     };
 }
 
-function publicDirectory(directory, route, router) {
-    let result = {};
-    let localDirectory = path.join(rootdir, directory);
-    let files = fs.readdirSync(localDirectory);
+function publicDirectory(directory) {
+    let requestType = {};
+    return async (ctx, next) => {
+        let localDirectory = path.join(rootdir, directory);
+        let file = path.join(localDirectory, ctx.request.url);
+        if (!fs.existsSync(file)) {
+            await next();
+            return;
+        }
+        if (fs.statSync(file).isDirectory()) {
+            file = path.join(file, 'index.html');
+        }
+        if (!fs.existsSync(file)) {
+            await next();
+            return;
+        }
 
-    route = route || '';
-    router = router || koa_router();
-
-    for (let file of files) {
         let extname = path.extname(file).toLowerCase();
-        let localFile = path.join(localDirectory, file);
-        if (fs.statSync(localFile).isDirectory()) {
-            publicDirectory(`${directory}/${file}`, `${route}/${file}`, router);
-            continue;
-        }
-
-        if (extname === '.html') {
-            result[`GET ${route}/${file}`] = fn_public(localFile, 'text/html');
-        }
-        else if (extname === '.js') {
-            result[`GET ${route}/${file}`] = fn_public(localFile, 'text/javascript');
-        }
-        else if (extname === '.css') {
-            result[`GET ${route}/${file}`] = fn_public(localFile, 'text/css');
-        }
-        else if (extname === '.ico') {
-            result[`GET ${route}/${file}`] = fn_public(localFile, 'image/x-icon');
-        }
-        else {
-            result[`GET ${route}/${file}`] = fn_public(localFile, 'text/plain');
-        }
-    }
-    result['GET /index.html'] && (result['GET /'] = result['GET /index.html']);
-
-    loadRouteController(result, router);
-    return router.routes();
+        let responsType = responsTypeDict.hasOwnProperty(extname) ? responsTypeDict[extname] : 'text/plain';
+        let data = await fs.readFileAsync(file);
+        ctx.response.type = responsType;
+        ctx.status = 200;
+        ctx.response.body = data;
+    };
 }
 
 module.exports = {
