@@ -2,17 +2,16 @@
 
 const gulp = require('gulp');
 const rename = require('gulp-rename');
-const clean = require('gulp-clean');
 const njk = require('gulp-nunjucks-render');
 const sequence = require('gulp-sequence');
-const watch = require('gulp-watch');
 const nodemon = require('gulp-nodemon');
 const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
+const del = require('del');
+const process = Promise.promisifyAll(require('child_process'));
 
 gulp.task('clean_dist', () => {
-    return gulp.src('dist')
-        .pipe(clean());
+    return del(['dist/*']);
 });
 
 gulp.task('copy', () => {
@@ -26,7 +25,7 @@ gulp.task('copy', () => {
 });
 
 gulp.task('compile_njk', () => {
-    gulp.src(['templates/static/*.njk'])
+    gulp.src(['templates/static/**/*.njk'])
         .pipe(njk({
             path: ['./templates'],
             envOptions: {
@@ -37,29 +36,21 @@ gulp.task('compile_njk', () => {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('watch', () => {
-    watch('templates/**/*.njk', { events: ['unlink'] }, function () {
-        gulp.run('refresh_dist');
-    });
-    watch('templates/**/*.njk', { events: ['add', 'change'] }, function () {
-        gulp.run('compile_njk');
-    });
-    watch('gulp_config.json', function () {
-        gulp.run('refresh_dist');
-    });
-});
-
 gulp.task('server', () => {
     nodemon({
         script: 'main.js',
-        ext: 'js json',
+        ext: 'js json njk',
+        exitcrash: true,
+        verbose: true,
         ignore: [
-            "dist/**/*.*",
-            "gulp_config.json",
-            "templates/**/*.*"
+            "dist/**/*",
+            "node_modules/**/*",
+            ".git",
+            ".gitignore"
         ],
+        tasks: ['refresh_dist'],
         env: { 'NODE_ENV': 'development' }
-    })
+    });
 });
 
 gulp.task('refresh_dist', function (cb) {
@@ -67,5 +58,5 @@ gulp.task('refresh_dist', function (cb) {
 });
 
 gulp.task('default', function (cb) {
-    sequence('clean_dist', ['copy', 'compile_njk'], 'server', 'watch', cb);
+    sequence('clean_dist', ['copy', 'compile_njk'], 'server', cb);
 });

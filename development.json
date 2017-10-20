@@ -1,0 +1,18 @@
+{
+    "apps": [
+        {
+            "name": "Test",
+            "script": "main.js",
+            "interpreter": "cmd",
+            "error_file": "./deploy/logs/test-err.log",
+            "out_file": "./deploy/logs/test-out.log",
+            "pid_file": "./deploy/logs/test.pid",
+            "watch": true,
+            "ignore_watch": [
+                "./dist/**/*",
+                "./node_modules/**/*",
+                "./deploy/logs/**/*"
+            ]
+        }
+    ]
+}

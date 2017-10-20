@@ -8,7 +8,6 @@ const koa_nunjucks_controller = require('./koa_extensions/koa-nunjucks-controlle
 const generic = require('./generic.json');
 
 let app = new koa();
-
 app.use(koa_bodyParser());
 app.use(async (ctx, next) => {
     console.log(`Process ${ctx.request.method} ${ctx.request.url}...`);

@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
-    "server": "npm install && gulp",
+    "server": "npm i && gulp refresh_dist && node main.js",
+    "dev": "gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -23,13 +24,13 @@
     "nunjucks": "^3.0.1"
   },
   "devDependencies": {
+    "del": "^3.0.0",
     "gulp": "^3.9.1",
-    "gulp-clean": "^0.3.2",
     "gulp-data": "^1.2.1",
     "gulp-nodemon": "^2.2.1",
     "gulp-nunjucks-render": "^2.2.1",
     "gulp-rename": "^1.2.2",
     "gulp-sequence": "^0.4.6",
-    "gulp-watch": "^4.3.11"
+    "npm-run": "^4.1.2"
   }
 }
