@@ -3,14 +3,20 @@ const generic = require('./../generic.json');
 const koa_nunjucks_controller = require('./../koa_extensions/koa-nunjucks-controller');
 
 let fn_user_menu = async (ctx, next) => {
+    if (!ctx.state.user) {
+        ctx.response.status = 404;
+        await next();
+        return;
+    }
+
     let token = ctx.request.query.token || ctx.request.header.authorization || '';
     token = token.replace('Bearer ', '');
     let tokenInfo = token && jwt.decode(token, { secret: generic.secretKey });
 
     let menu = koa_nunjucks_controller.default.render("user_menu.njk", {
         username: tokenInfo.user,
-        menuitems: [{ herf: "/user/dashboard.html", text: "Dashboard" },
-        { herf: "#", text: "Sign out" }]
+        menuitems: [{ herf: "/user/" + tokenInfo.user + "?token=" + token, text: "Dashboard" },
+        { id: "navbaritem-signout", text: "Sign out" }]
     });
 
     ctx.response.status = 200;

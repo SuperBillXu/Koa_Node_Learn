@@ -65,6 +65,13 @@
     function setNavMenu(data) {
         $('#navbar-right').remove();
         $('#navbar-collapse').append(data.menu);
+        $('#navbaritem-signout').click(signout);
+    }
+
+    function signout() {
+        localStorage.removeItem('menu');
+        localStorage.removeItem('user_token');
+        location = '/';
     }
 </script>    
 {% endblock %}

@@ -14,33 +14,29 @@ app.use(async (ctx, next) => {
     await next();
 });
 app.use(koa_router_controller.publicDirectory('/dist'));
-app.use(async (ctx, next) => {
-    if (!ctx.request.url.match(/^\/api\//)) {
-        ctx.response.status = 404;
-        ctx.response.type = 'text/html';
-        ctx.response.body = koa_nunjucks_controller.default.render('notfound_page.njk', {});
-    }
-    else {
-        await next().catch((err) => {
-            if (err.status === 401) {
-                ctx.status = err.status;
-                ctx.body = 'Protected resource, use Authorization header to get access\n';
-            }
-            else if (err.status === 404) {
-                ctx.response.status = err.status;
-                ctx.response.body = `Can't ${ctx.request.method} ${ctx.request.url}`;
-            }
-            else {
-                throw err;
-            }
-        });
-    }
-});
 app.use(koa_jwt({
     secret: generic.secretKey,
-    getToken: ctx => ctx.request.query.token
+    getToken: ctx => ctx.request.query.token,
+    passthrough: true
 }).unless({ path: /^\/api\/authorization/ }));
 app.use(koa_router_controller.appendControllers('/api'));
+app.use(async (ctx, next) => {
+    if (ctx.status === 401) {
+        ctx.body = 'Protected resource, use Authorization header to get access\n';
+    }
+    else if (ctx.status === 404) {
+        if (!ctx.request.url.match(/^\/api\//)) {
+            ctx.response.type = 'text/html';
+            ctx.response.body = koa_nunjucks_controller.default.render('notfound_page.njk', {});
+        }
+        else {
+            ctx.response.body = `Can't ${ctx.request.method} ${ctx.request.url}`;
+        }
+    }
+    else {
+        throw err;
+    }
+});
 app.listen(5001);
 console.log('app started at port 5001...');
 

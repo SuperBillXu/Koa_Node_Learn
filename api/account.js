@@ -1,10 +1,14 @@
+const DataManager = require('./../data/dataManager');
+
 let fn_account = async (ctx, next) => {
-    ctx.response.status = 200;
-    ctx.response.type = 'application/json';
-    ctx.response.body = {
-        age: '25',
-        skill: 'Csharp,NodeJs,Jquery',
-        sex: 'Male'
+    if (ctx.state.user) {
+        ctx.response.status = 200;
+        ctx.response.type = 'application/json';
+        ctx.response.body = DataManager.getDefault().getAccountInfo();
+    }
+    else {
+        ctx.response.status = 401;
+        await next();
     }
 };
 

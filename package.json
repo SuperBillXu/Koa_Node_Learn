@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
+    "refresh": "gulp refresh_dist && node main.js",
     "server": "npm i && gulp refresh_dist && node main.js",
     "dev": "gulp",
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -6,7 +6,13 @@
         </a>
         <ul class="dropdown-menu">
             {% for menuitem in menuitems %}
-            <li><a href="{{ menuitem.herf }}">{{ menuitem.text }}</a></li>
+                {% if menuitem.id and menuitem.herf %}
+                    <li><a id="{{menuitem.id}}" href="{{ menuitem.herf }}">{{ menuitem.text }}</a></li>
+                {% elif menuitem.herf %}
+                    <li><a href="{{ menuitem.herf }}">{{ menuitem.text }}</a></li>
+                {% elif menuitem.id%}
+                    <li><a id="{{menuitem.id}}">{{ menuitem.text }}</a></li>
+                {% endif%}
             {% endfor %}
         </ul>
     </li>

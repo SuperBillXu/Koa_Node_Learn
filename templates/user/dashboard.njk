@@ -1,0 +1,15 @@
+{% extends "navbar_page.njk" %}
+
+{% block body %}
+{{super()}}
+<div class="container">
+    <div class="jumbotron">
+        <h3>账号基础信息</h3>
+        <ul id="info_list">
+            {% for ingredient, amount in data %}
+                <li>{{ingredient}}:{{amount}}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
