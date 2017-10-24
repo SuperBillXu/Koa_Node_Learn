@@ -3,7 +3,9 @@
         {
             "src": [
                 "node_modules/bootstrap/dist/css/*.min.css",
-                "node_modules/bootstrap/dist/css/*.min.css.map"
+                "node_modules/bootstrap/dist/css/*.min.css.map",
+                "css/custom_style.css",
+                "css/font-awesome.min.css"
             ],
             "dest": "dist/assets/css"
         },
@@ -17,7 +19,10 @@
             "dest": "dist/assets/js"
         },
         {
-            "src": "node_modules/bootstrap/dist/fonts/*.*",
+            "src": [
+                "node_modules/bootstrap/dist/fonts/*.*",
+                "css/fontawesome-webfont.*"
+            ],
             "dest": "dist/assets/fonts"
         },
         {
