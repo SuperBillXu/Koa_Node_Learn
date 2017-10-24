@@ -14,21 +14,20 @@
         </div>
         <div id="navbar-collapse" class="collapse navbar-collapse">
             <ul id="navbar-left" class="nav navbar-nav">
-                <li class="active"><a href="#">iOS</a></li>
-                <li><a href="#">Android</a></li>
-                <li class="dropdown">
+                <li id="navitem-home"><a href="/">首页</a></li>
+                <li id="navitem-resolve"><a href="#">解题</a></li>
+                <li id="navitem-download"><a href="/download.html">下载</a></li>
+                <li id="navitem-more" class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    Java
+                        更多
                         <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">jmeter</a></li>
-                        <li><a href="#">Ansssd</a></li>
-                        <li><a href="#">Jasper Report</a></li>
+                        <li><a href="#">论坛</a></li>
+                        <li><a href="#">教程</a></li>
+                        <li><a href="#">问题报告</a></li>
                         <li class="divider"></li>
-                        <li><a href="#">分离的链接</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">另一个分离的链接</a></li>
+                        <li><a href="#">关于我们</a></li>
                     </ul>
                 </li>
             </ul>
@@ -43,12 +42,19 @@
 {% block script %}
 {{ super() }}
 <script>
+    if (location.pathname === '/download.html') {
+        $('#navitem-download').addClass('active');
+    }
+    else if (location.pathname === '/' || location.pathname==='/index.html') {
+        $('#navitem-home').addClass('active');
+    }
+
     var menuData = localStorage.getItem('menu');
     menuData && (menuData=JSON.parse(menuData));
     if (menuData && menuData.expired > Date.now()){
         setNavMenu(menuData);        
     }
-    else if (localStorage.getItem('user_token')) {
+    else if (localStorage.getItem('user_token') && !menuData) {
         $.ajax({
             type: "get",
             url: "/api/user_menu",
@@ -65,13 +71,11 @@
     function setNavMenu(data) {
         $('#navbar-right').remove();
         $('#navbar-collapse').append(data.menu);
-        $('#navbaritem-signout').click(signout);
-    }
-
-    function signout() {
-        localStorage.removeItem('menu');
-        localStorage.removeItem('user_token');
-        location = '/';
-    }
+        $('#navbaritem-signout').click(function () {
+            localStorage.removeItem('menu');
+            localStorage.removeItem('user_token');
+            location = '/';
+        });
+    }    
 </script>    
 {% endblock %}
